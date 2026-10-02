@@ -14,7 +14,7 @@ export default function App() {
         <div className="header-inner">
           <div className="brand">
             <img src={logo} alt="Tinkers Lab" className="brand-logo" />
-            <span className="brand-name">Tinkerer's Lab</span>
+            <span className="brand-name">Tinkerers' Lab</span>
           </div>
 
           {/* Desktop nav — hidden on mobile */}
@@ -34,7 +34,7 @@ export default function App() {
           </nav>
 
           {/* Hamburger — hidden on desktop */}
-          <button className="hamburger" onClick={() => setMenuOpen(p => !p)}>
+          <button className="hamburger" onClick={() => setMenuOpen((p) => !p)}>
             {menuOpen ? "✕" : "☰"}
           </button>
         </div>
@@ -46,13 +46,19 @@ export default function App() {
               <div className="slide-menu-heading">Filament Calculator</div>
               <button
                 className={`slide-menu-item ${page === "calculator" ? "active" : ""}`}
-                onClick={() => { setPage("calculator"); setMenuOpen(false); }}
+                onClick={() => {
+                  setPage("calculator");
+                  setMenuOpen(false);
+                }}
               >
                 Calculator
               </button>
               <button
                 className={`slide-menu-item ${page === "admin" ? "active" : ""}`}
-                onClick={() => { setPage("admin"); setMenuOpen(false); }}
+                onClick={() => {
+                  setPage("admin");
+                  setMenuOpen(false);
+                }}
               >
                 Admin
               </button>
