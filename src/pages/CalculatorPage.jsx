@@ -1,20 +1,17 @@
 import { useState, useEffect } from "react";
-import { getPrices, getSlabs } from "../utils/storage";
+import { getPrices, getSlabsForMaterial } from "../utils/storage";
 import CumulativeSection from "../components/CumulativeSection";
 import WeightDiffSection from "../components/WeightDiffSection";
 
 export default function CalculatorPage() {
   const [material, setMaterial] = useState("PLA");
-  const [prices, setPrices] = useState({ PLA: 2.5, ABS: 3.0 });
-  const [slabs, setSlabs] = useState([]);
+  const [prices, setPrices] = useState({ PLA: 3.0, ABS: 4.0 });
 
-  // Re-read prices every time user switches to calculator
-  // (in case admin updated them in the same session)
   useEffect(() => {
     setPrices(getPrices());
-    setSlabs(getSlabs());
   }, []);
 
+  const slabs = getSlabsForMaterial(material);
   const pricePerGram = prices[material];
 
   return (
@@ -30,7 +27,9 @@ export default function CalculatorPage() {
               fontSize: "13px",
               marginTop: "4px",
             }}
-          ></p>
+          >
+            Select material, enter usage
+          </p>
         </div>
 
         <div
@@ -55,20 +54,12 @@ export default function CalculatorPage() {
               ABS
             </button>
           </div>
-
-          <div className="rate-badge">
-            <span className="rate-label">Current rate</span>
-            <span className="rate-value">
-              ₹{pricePerGram.toFixed(2)}
-              <span style={{ fontSize: "13px", fontWeight: 400 }}>/g</span>
-            </span>
-          </div>
         </div>
       </div>
 
       <div className="sections-grid">
         <CumulativeSection slabs={slabs} />
-        <WeightDiffSection pricePerGram={pricePerGram} />
+        <WeightDiffSection slabs={slabs} />
       </div>
     </div>
   );

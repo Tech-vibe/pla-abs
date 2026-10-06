@@ -34,7 +34,13 @@ export default function CumulativeSection({ slabs }) {
     if (e.key === "Enter") handleAdd();
   }
 
-  // Running total grams up to each entry row
+  function runningCost(index) {
+    const grams = entries
+      .slice(0, index + 1)
+      .reduce((sum, e) => sum + e.grams, 0);
+    return calcTieredCost(grams, slabs).total;
+  }
+
   function runningGrams(index) {
     return entries.slice(0, index + 1).reduce((sum, e) => sum + e.grams, 0);
   }
@@ -73,42 +79,40 @@ export default function CumulativeSection({ slabs }) {
           </div>
         ) : (
           <>
-            {/* Entry rows with running grams */}
+            {/* Entry rows */}
             <div className="bill-list">
-              {entries.map((e, i) => {
-                const cumGrams = runningGrams(i);
-                const cumCost = calcTieredCost(cumGrams, slabs).total;
-                return (
-                  <div className="bill-row" key={e.id}>
-                    <div className="bill-row-left">
-                      <span className="bill-index">{i + 1}</span>
-                      <div>
-                        <span className="bill-grams">{e.grams}g</span>
-                        <span className="bill-formula">
-                          {" "}
-                          · total {cumGrams.toFixed(1)}g
-                        </span>
-                      </div>
-                    </div>
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "12px",
-                      }}
-                    >
-                      <span className="bill-cost">₹{cumCost.toFixed(2)}</span>
-                      <button
-                        className="bill-remove"
-                        onClick={() => handleRemove(e.id)}
-                        title="Remove"
-                      >
-                        ×
-                      </button>
+              {entries.map((e, i) => (
+                <div className="bill-row" key={e.id}>
+                  <div className="bill-row-left">
+                    <span className="bill-index">{i + 1}</span>
+                    <div>
+                      <span className="bill-grams">{e.grams}g</span>
+                      <span className="bill-formula">
+                        {" "}
+                        · total {runningGrams(i).toFixed(1)}g
+                      </span>
                     </div>
                   </div>
-                );
-              })}
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "12px",
+                    }}
+                  >
+                    <span className="bill-cost">
+                      ₹{runningCost(i).toFixed(2)}
+                    </span>
+                    <button
+                      className="bill-remove"
+                      onClick={() => handleRemove(e.id)}
+                      title="Remove"
+                    >
+                      ×
+                    </button>
+                  </div>
+                </div>
+              ))}
             </div>
 
             {/* Slab breakdown */}
