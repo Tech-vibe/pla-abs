@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { calcTieredCost } from "../utils/storage";
+import { generateReceipt } from "../utils/generateReceipt";
 
-export default function WeightDiffSection({ slabs }) {
+export default function WeightDiffSection({ slabs, material }) {
   const [initial, setInitial] = useState("");
   const [final, setFinal] = useState("");
 
@@ -21,6 +22,16 @@ export default function WeightDiffSection({ slabs }) {
     if (finalGtInitial)
       return "Final weight is greater than initial weight. Please check your values.";
     return null;
+  }
+  function handlePrint() {
+    if (!result) return;
+    generateReceipt({
+      material,
+      breakdown: result.breakdown,
+      totalGrams,
+      totalCost: result.total,
+      section: "Before/After weight",
+    });
   }
 
   const warning = getWarning();
@@ -127,18 +138,19 @@ export default function WeightDiffSection({ slabs }) {
             </div>
 
             {/* Right-aligned Clear All button with responsive min-width */}
+
             <div
               style={{
                 display: "flex",
                 justifyContent: "flex-end",
+                gap: "8px",
                 marginTop: "12px",
               }}
             >
-              <button
-                className="btn btn-danger btn-sm"
-                style={{ width: "17%", minWidth: "90px" }}
-                onClick={handleClear}
-              >
+              <button className="btn btn-ghost btn-sm" onClick={handlePrint}>
+                Print Receipt
+              </button>
+              <button className="btn btn-danger btn-sm" onClick={handleClear}>
                 Clear all
               </button>
             </div>

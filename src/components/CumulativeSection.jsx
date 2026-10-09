@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { calcTieredCost } from "../utils/storage";
-
-export default function CumulativeSection({ slabs }) {
+import { generateReceipt } from "../utils/generateReceipt";
+export default function CumulativeSection({ slabs, material }) {
   const [entries, setEntries] = useState([]);
   const [input, setInput] = useState("");
   const [error, setError] = useState("");
@@ -18,6 +18,16 @@ export default function CumulativeSection({ slabs }) {
     setError("");
     setEntries((prev) => [...prev, { id: Date.now(), grams: val }]);
     setInput("");
+  }
+  function handlePrint() {
+    if (!result) return;
+    generateReceipt({
+      material,
+      breakdown: result.breakdown,
+      totalGrams,
+      totalCost: result.total,
+      section: "Cumulative Usage",
+    });
   }
 
   function handleRemove(id) {
@@ -182,13 +192,28 @@ export default function CumulativeSection({ slabs }) {
                 <div className="bill-total-amount">
                   ₹{result ? result.total.toFixed(2) : "0.00"}
                 </div>
-                <button
-                  className="btn btn-danger btn-sm"
-                  style={{ marginTop: "8px" }}
-                  onClick={handleClear}
+                <div
+                  style={{
+                    display: "flex",
+                    gap: "8px",
+                    marginTop: "8px",
+                    justifyContent: "flex-end",
+                  }}
                 >
-                  Clear all
-                </button>
+                  <button
+                    className="btn btn-ghost btn-sm"
+                    onClick={handlePrint}
+                    disabled={!result}
+                  >
+                    Print Receipt
+                  </button>
+                  <button
+                    className="btn btn-danger btn-sm"
+                    onClick={handleClear}
+                  >
+                    Clear all
+                  </button>
+                </div>
               </div>
             </div>
           </>

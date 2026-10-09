@@ -58,8 +58,8 @@ export default function CalculatorPage() {
       </div>
 
       <div className="sections-grid">
-        <CumulativeSection slabs={slabs} />
-        <WeightDiffSection slabs={slabs} />
+        <CumulativeSection slabs={slabs} material={material} />
+        <WeightDiffSection slabs={slabs} material={material} />
       </div>
     </div>
   );
